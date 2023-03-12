@@ -20,7 +20,7 @@ pip3 install -r requirements
 - запуск конвейера
 
 ```
-./conveyor.sh
+./pipline.sh
 ```
 
 ## Этапы решения
