@@ -27,7 +27,7 @@ PYTHONPATH=. python3 src/features/data_preprocessing.py
 PYTHONPATH=. python3 src/models/model_prepatation.py
 
 #запускаем скрипт для проверки полученных транзакций
-PYTHONPATH=. python -m unittest src/tests/model_testing.py
+PYTHONPATH=. python3 -m unittest src/tests/model_testing.py
 
 
 
