@@ -163,7 +163,7 @@ cython_debug/
 data/
 include/
 model/
-.volumes/
+volumes/
 
 .python-version
 pyvenv.cfg
