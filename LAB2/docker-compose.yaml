@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   jenkins:
-    container_name: jenkins
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
+    container_name: jenkins
     privileged: true
     user: root
     ports:
