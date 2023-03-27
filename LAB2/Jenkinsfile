@@ -26,13 +26,33 @@ pipeline {
             }
         }
 
-         stage('Dependencies') {
+        stage('Dependencies') {
             steps{
-                sh 'python3 -m venv .venv'
-                sh 'source .venv/bin/activate'
-                sh 'pip install -r requirements.txt'
+                sh 'cd LAB2'
+                sh 'python3 --version'
+                sh 'pip install nvidia-pyindex'
+                sh 'python3 -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Preprocessing') {
+            steps{
+                sh 'python3 src/features/data_preprocessing.py'
+            }
+        }
+
+        stage('Train') {
+            steps{
+                sh 'python3 src/models/model_prepatation.py'
+            }
+        }
+
+        stage('Test') {
+            steps{
+                sh 'python3 -m unittest src/tests/model_testing.py'
             }
         }
     }
 }
+
 
