@@ -1,0 +1,7 @@
+data/
+include/
+model/
+volumes/
+
+.python-version
+pyvenv.cfg

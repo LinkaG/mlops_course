@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
     container_name: jenkins
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     privileged: true
     user: root
     ports:

@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('Prepare') {
+            steps {
+                sh 'rm -rf ./data'
+                sh 'mkdir ./data'
+                sh 'mkdir ./data/external'
+                sh 'mkdir ./data/interim'
+                sh 'mkdir ./data/processed'
+            }
+        }
+    }
+}
