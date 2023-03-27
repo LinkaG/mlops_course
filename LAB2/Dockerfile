@@ -1,7 +1,7 @@
 FROM jenkins/jenkins:lts-alpine
 
 USER root
-ARG PYTHON_VERSION=3.9.7
+ARG PYTHON_VERSION=3.8.10
 
 # install build dependencies and needed tools
 RUN apk add \
