@@ -1,8 +1,10 @@
 # MLOps_course
 Практические задания по mlops
 
-## Pipline в Jenkins
+## Результат
+![Image](https://github.com/LinkaG/mlops_course/raw/main/LAB2/results.png)
 
+## Pipline в Jenkins
 ```
 pipeline {
     agent any
