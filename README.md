@@ -1,37 +1,65 @@
 # MLOps_course
 Практические задания по mlops
 
-## Простейший конвейер машинного обучения
+## Результат
+![Image](https://github.com/LinkaG/mlops_course/raw/main/LAB2/results.png)
 
-### Цель задания:
-В этом задании требуется создать автоматический конвейер проекта машинного обучения. Для склейки отдельных частей конвейера необходимо применить простые скрипты автоматизации.
-
-### Описание решения:
-Идея для реализации из соревнования [Data Fusion Contest 2023](https://ods.ai/competitions/data-fusion2023-attack) по теме Adversarial ML.
-
-В нашем распоряжении имеется банковская модель классификации, предсказывающая дефолт клиента. Это рекуррентная нейросеть, принимающая на вход последние 300 транзакций клиента и классифицирующая клиентов на 2 класса. У нас нет доступа к полному набору данных, на которых модель была обучена, однако есть небольшая размеченная выборка клиентов с сопроводительными материалами.
-
-Алгоритм по последовательности транзакций создает новый табличный .csv файл, который сильнее всего поменяет предсказания в предоставленной модели. 
-
-### Запуск решения:
-
-- установка зависимостей
-
+## Pipline в Jenkins
 ```
-pip3 install -r requirements
+pipeline {
+    agent any
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'tasks/task-2',
+                credentialsId: '47642f91-d52b-46b2-8392-ee2c55ce1119',
+                url: 'git@github.com:LinkaG/mlops_course.git'
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                sh 'cd LAB2'
+                sh 'rm -rf ./data'
+                sh 'mkdir ./data'
+                sh 'mkdir ./data/external'
+                sh 'mkdir ./data/interim'
+                sh 'mkdir ./data/processed'
+                sh 'rm -rf ./model'
+                sh 'mkdir ./model'
+                sh 'wget -qO- https://storage.yandexcloud.net/ds-ods/files/materials/c7b69754/transactions.zip | unzip >> ./data/external/transactions.csv'
+                sh 'wget -qO- https://storage.yandexcloud.net/ds-ods/files/materials/a4faa80b/train_target.zip | unzip >> ./data/external/train_target.csv'
+                sh 'wget -qO- -O ./model/tmp.zip https://storage.yandexcloud.net/ds-ods/files/materials/750fd067/model.zip && unzip ./model/tmp.zip && rm -f ./model/tmp.zip'
+                sh 'wget -O ./model/quantiles.json https://storage.yandexcloud.net/ds-ods/files/materials/4892996d/quantiles.json'
+            }
+        }
+
+        stage('Dependencies') {
+            steps{
+                sh 'cd LAB2'
+                sh 'python3 --version'
+                sh 'pip install nvidia-pyindex'
+                sh 'python3 -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Preprocessing') {
+            steps{
+                sh 'python3 src/features/data_preprocessing.py'
+            }
+        }
+
+        stage('Train') {
+            steps{
+                sh 'python3 src/models/model_prepatation.py'
+            }
+        }
+
+        stage('Test') {
+            steps{
+                sh 'python3 -m unittest src/tests/model_testing.py'
+            }
+        }
+    }
+}
 ```
-- запуск конвейера
-
-```
-./pipline.sh
-```
-
-### Этапы решения
-
-- 1 этап: загружается архивы датасета с транзакциями и целевой переменной, распаковываются в папку data/external; также загружается модель для атаки;
-
-- 2 этап: запускается скрипт для подготовки датасета для использования в RNN-модели;
-
-- 3 этап: запускается скрипт для получения атакованных транзакций;
-
-- 4 этап: запускается скрипт для проверки полученных транзакций.

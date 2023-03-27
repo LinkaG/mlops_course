@@ -1,0 +1,9 @@
+data/
+include/
+model/
+volumes/
+
+.python-version
+pyvenv.cfg
+jenkins
+jenkins.pub

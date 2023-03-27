@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'tasks/task-2',
+                credentialsId: '47642f91-d52b-46b2-8392-ee2c55ce1119',
+                url: 'git@github.com:LinkaG/mlops_course.git'
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                sh 'cd LAB2'
+                sh 'rm -rf ./data'
+                sh 'mkdir ./data'
+                sh 'mkdir ./data/external'
+                sh 'mkdir ./data/interim'
+                sh 'mkdir ./data/processed'
+                sh 'rm -rf ./model'
+                sh 'mkdir ./model'
+                sh 'wget -qO- https://storage.yandexcloud.net/ds-ods/files/materials/c7b69754/transactions.zip | unzip >> ./data/external/transactions.csv'
+                sh 'wget -qO- https://storage.yandexcloud.net/ds-ods/files/materials/a4faa80b/train_target.zip | unzip >> ./data/external/train_target.csv'
+                sh 'wget -qO- -O ./model/tmp.zip https://storage.yandexcloud.net/ds-ods/files/materials/750fd067/model.zip && unzip ./model/tmp.zip && rm -f ./model/tmp.zip'
+                sh 'wget -O ./model/quantiles.json https://storage.yandexcloud.net/ds-ods/files/materials/4892996d/quantiles.json'
+            }
+        }
+
+        stage('Dependencies') {
+            steps{
+                sh 'cd LAB2'
+                sh 'python3 --version'
+                sh 'pip install nvidia-pyindex'
+                sh 'python3 -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Preprocessing') {
+            steps{
+                sh 'python3 src/features/data_preprocessing.py'
+            }
+        }
+
+        stage('Train') {
+            steps{
+                sh 'python3 src/models/model_prepatation.py'
+            }
+        }
+
+        stage('Test') {
+            steps{
+                sh 'python3 -m unittest src/tests/model_testing.py'
+            }
+        }
+    }
+}
+
+
