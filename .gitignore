@@ -164,6 +164,7 @@ data/
 include/
 model/
 volumes/
+Scripts/
 
 .python-version
 pyvenv.cfg
