@@ -12,6 +12,7 @@ RUN python train.py
 
 FROM builder as api
 COPY --from=trainer /app/model.joblib /app/model.joblib
+WORKDIR /app/
 
 EXPOSE 5000
 
