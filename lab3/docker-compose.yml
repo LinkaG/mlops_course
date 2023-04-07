@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+
+  proxy:
+    image: nginx
+    container_name: proxy
+    volumes:
+     - .volumes/templates:/etc/nginx/templates # ещё кое что ниже допиши, с конфигом, глянь на докерхабе офишиал имедж нжинкса и поймешь
+    depends_on:
+      - api
+    ports:
+     - "8080:80"
+    environment:
+#     - NGINX_HOST=<> нам это наверное не нужно
+     - NGINX_PORT=80
