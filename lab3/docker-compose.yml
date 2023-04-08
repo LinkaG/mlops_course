@@ -6,8 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: api
-    networks:
-      - custom
+    restart: "on-failure"
 
   proxy:
     image: nginx
@@ -17,14 +16,6 @@ services:
      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
+    restart: "on-failure"
     ports:
-     - "8080:80"
-    environment:
-#     - NGINX_HOST=<> нам это наверное не нужно
-     - NGINX_PORT=80
-    networks:
-      - custom
-
-networks:
-  custom:
-    driver: bridge
+     - "80:80"
