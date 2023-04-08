@@ -6,12 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: api
+    networks:
+      - custom
 
   proxy:
     image: nginx
     container_name: proxy
     volumes:
      - .volumes/templates:/etc/nginx/templates # ещё кое что ниже допиши, с конфигом, глянь на докерхабе офишиал имедж нжинкса и поймешь
+     - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
     ports:
@@ -19,3 +22,9 @@ services:
     environment:
 #     - NGINX_HOST=<> нам это наверное не нужно
      - NGINX_PORT=80
+    networks:
+      - custom
+
+networks:
+  custom:
+    driver: bridge
