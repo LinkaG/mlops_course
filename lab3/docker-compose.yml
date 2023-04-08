@@ -10,7 +10,7 @@ services:
     image: nginx
     container_name: proxy
     volumes:
-     - .volumes/templates:/etc/nginx/templates # ещё кое что ниже допиши, с конфигом, глянь на докерхабе офишиал имедж нжинкса и поймешь
+     - .volumes/templates:/etc/nginx/templates
      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
